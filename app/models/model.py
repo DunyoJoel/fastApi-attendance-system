@@ -10,7 +10,7 @@ from datetime import datetime
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key =True, index = True)
-    name = Column(String)
+    fullname = Column(String)
     department = Column(String, unique=True, index=True)
     location = Column(String,  nullable=True)
     contact = Column(String)
@@ -27,11 +27,8 @@ class User(Base):
 class Role(Base):
     __tablename__ = 'roles'
     id = Column(Integer, primary_key =True, index = True)
-    name = Column(String)
+    rolename = Column(String)
     department = Column(String, unique=True, index=True)
-    location = Column(String,  nullable=True)
-    contact = Column(String)
-    device = Column(String,  nullable=True)
     admin_id = Column(Integer,ForeignKey("admins.id"))
     belongs_to = relationship("User", back_populates="roles")
     dateAdded = Column(DateTime, default=datetime.now)
@@ -63,6 +60,7 @@ class Attendance(Base):
     id = Column(Integer, primary_key = True, index = True)
     time_in = Column(DateTime, default=datetime.now)
     time_out = Column(DateTime, default=datetime.now)
+    date = password = Column(String)
     userId = Column(Integer,ForeignKey("users.id"))
     action_by =relationship("User", back_populates="attendant", uselist=False)
 
