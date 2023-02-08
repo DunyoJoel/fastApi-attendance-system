@@ -49,8 +49,7 @@ class ShowAttendance(BaseModel):
 
 class CreateDepartment(BaseModel):
     department_name: str
-    dateAdded : datetime
-    isActive: bool = None
+    
 
     class Config():
         orm_mode = True
@@ -58,7 +57,7 @@ class CreateDepartment(BaseModel):
 class ShowDepartment(BaseModel):
     id: int
     department_name: str
-    isActive: bool
+    admin_id : int
     dateAdded: datetime
     
     class Config():
@@ -72,8 +71,7 @@ class CreateAdmin(BaseModel):
     contact : str
     email : str
     password : str
-    dateAdded : datetime
-    isActive: bool = None
+    
 
     class Config():
         orm_mode = True
@@ -83,7 +81,6 @@ class ShowAdmin(BaseModel):
     admin_name: str
     contact : str
     email : str
-    password : str
     dateAdded : datetime
     isActive: bool = None
     
@@ -112,3 +109,10 @@ class ShowRole(BaseModel):
     class Config():
         orm_mode = True
 
+
+
+
+class TokenPayload(BaseModel):
+    email: str = None
+    contact: str = None
+    exp: int = None

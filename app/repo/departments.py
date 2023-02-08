@@ -5,15 +5,15 @@ from app.models import model
 from app.utils import schemas
 
 
-def create(request: schemas.CreateDepartment, db: Session):
+def create(request: schemas.CreateDepartment, db: Session, current_user):
     department = db.query(model.Department).filter(model.Department.department_name  == request.department_name ).first()
     if department:
         raise HTTPException(status_code= 303,
                             detail =f"department with the department name { request.department_name} already exist")
     else: 
         new_department = model.Department(department_name =request.department_name,
-                               department_name = request.department_name,
-                              date= request.dateAdded
+                               
+                               admin_id  = current_user.id 
                               )
                               
                               

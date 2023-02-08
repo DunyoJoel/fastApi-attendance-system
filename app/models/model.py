@@ -19,8 +19,9 @@ class User(Base):
     isActive = Column(Boolean(), default=True)
     department_id = Column(Integer,ForeignKey("departments.id"))
     role_id = Column(Integer,ForeignKey("roles.id"))
-    action_by = relationship("Department", back_populates="User", uselist=False)
-    which_role= relationship("Role", back_populates="users")
+    department = relationship("Department", back_populates="users")
+    role = relationship("Role", back_populates="users")
+    attendance = relationship("Attendance", back_populates="users")
 
 
 
@@ -30,8 +31,9 @@ class Role(Base):
     rolename = Column(String)
     department = Column(String, unique=True, index=True)
     admin_id = Column(Integer,ForeignKey("admins.id"))
-    belongs_to = relationship("User", back_populates="roles")
     dateAdded = Column(DateTime, default=datetime.now)
+    users = relationship("User", back_populates="role")
+    
 
 
 
@@ -41,6 +43,8 @@ class Department(Base):
     department_name = Column(String)
     dateAdded = Column(DateTime, default=datetime.now)
     admin_id = Column(Integer,ForeignKey("admins.id"))
+    
+    users = relationship("User", back_populates="department")
 
 
 class Admin(Base):
@@ -50,8 +54,10 @@ class Admin(Base):
     contact = Column(String)
     email = Column(String, unique=True, index=True)
     password = Column(String)
-    admin_addedby = relationship("Department")
     dateAdded = Column(DateTime, default=datetime.now)
+    isActive = Column(Boolean(), default=True)
+    
+    
 
 
 
@@ -60,9 +66,9 @@ class Attendance(Base):
     id = Column(Integer, primary_key = True, index = True)
     time_in = Column(DateTime, default=datetime.now)
     time_out = Column(DateTime, default=datetime.now)
-    date = password = Column(String)
+    attend_date = Column(DateTime, default=datetime.now)
     userId = Column(Integer,ForeignKey("users.id"))
-    action_by =relationship("User", back_populates="attendant", uselist=False)
+    users =relationship("User", back_populates="attendance")
 
     
     

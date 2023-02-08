@@ -6,17 +6,17 @@ from app.utils import schemas
 
 
 def create(request: schemas.CreateAdmin, db: Session):
-    admin = db.query(model.Admin).filter(model.Admin.admin_name == request.admin_name).first()
+    admin = db.query(model.Admin).filter(model.Admin.email == request.email).first()
     if admin:
         raise HTTPException(status_code= 303,
-                            detail =f"Admin with the name { request.admin_name} already exist")
+                            detail =f"Admin with the name { request.email} already exist")
     else: 
         new_admin = model.Admin(admin_name =request.admin_name,
                               contact = request.contact,
                               email= request.email,
-                              password= request.password,
-                              date= request.dateAdded,
-                              isActive = request.isActive)
+                              password= Hash.bcrypt(request.password),
+                             
+                              )
                               
                               
         db.add(new_admin)
@@ -79,13 +79,32 @@ def update(id: int, request: schemas.ShowAdmin, db: Session):
 
 
 
-def showAdmin(db: Session, admin_name: str ):
-    admin = db.query(model.Admin).filter(model.Admin.admin_name == admin_name).first()
+def showAdmin(db: Session, email: str ):
+    admin = db.query(model.Admin).filter(model.Admin.email == email).first()
     if not admin:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"User with the id {admin_name} is not available")
+                            detail=f"Admin with the id {email} is not available")
     return admin
 def get_by_name(contact: str, db: Session):
     admin = db.query(model.Admin).filter(
         model.Admin.contact == contact).first()
     return admin
+
+
+
+def is_active(user: schemas.ShowAdmin) -> bool:
+        return user.isActive
+    
+def get_by_email(db: Session, request):
+    admin = db.query(model.Admin).filter(model.Admin.email ==request).first()
+    return admin
+
+def authenticate( db: Session ,request):
+        admin = get_by_email(db, request.username)
+        if not admin:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Invalid Credentials")
+        elif not Hash.verify(admin.password, request.password):
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Incorrect password")
+        return admin
