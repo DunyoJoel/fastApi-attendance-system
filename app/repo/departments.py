@@ -40,7 +40,9 @@ def show(id: int, db: Session):
   
 
 def get_all(db: Session):
-    departments = db.query(model.Department).filter(model.Department.action_by == None).all()
+    departments = db.query(model.Department,model.Admin).outerjoin(model.Admin).all()
+    print(departments)
+
     return departments
 
 
@@ -55,7 +57,7 @@ def destroy(id: int, db: Session):
     return department
 
 
-def update(id: int, request: schemas.ShowDepartment, db: Session):
+def update(id: int, request: schemas.UpdateDepartment, db: Session):
     department = db.query(model.Department).filter(model.Department.id == id).first()
     if not department:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -63,8 +65,6 @@ def update(id: int, request: schemas.ShowDepartment, db: Session):
 
     department.department_name =request.department_name
     
-    department.dateAdded = request.dateAdded
-   
     db.commit()
     db.refresh(department)
     return department

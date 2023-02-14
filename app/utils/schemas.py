@@ -63,6 +63,14 @@ class ShowDepartment(BaseModel):
     class Config():
         orm_mode = True
 
+class UpdateDepartment(BaseModel):
+    id: int
+    department_name: str
+   
+    
+    class Config():
+        orm_mode = True
+
 
 
 
@@ -91,19 +99,15 @@ class ShowAdmin(BaseModel):
 
 
 class CreateRole(BaseModel):
-    rolename : str
-    department : str
-    dateAdded : datetime
-    isActive: bool = None
-
+    role_name : str
+  
     class Config():
         orm_mode = True
 
 class ShowRole(BaseModel):
     id: int
-    rolename : str
-    department: str
-    isActive: bool
+    role_name : str
+    admin_id : int
     dateAdded: datetime
     
     class Config():
@@ -116,3 +120,9 @@ class TokenPayload(BaseModel):
     email: str = None
     contact: str = None
     exp: int = None
+
+class DepartmentWithAdmin(BaseModel):
+  Department:ShowDepartment=None
+  Admin:ShowAdmin=None
+  class Config():
+        orm_mode = True

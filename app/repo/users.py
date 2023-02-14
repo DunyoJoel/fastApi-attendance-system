@@ -66,7 +66,7 @@ def update(id: int, request: schemas.ShowUser, db: Session):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"User with id {id} not found")
 
-    user.fullname =request.fulname
+    user.fullname = request.fulname
     user.department = request.department
     user.location = request.location
     user.contact = request.contact

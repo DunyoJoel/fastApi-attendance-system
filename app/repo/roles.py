@@ -5,16 +5,17 @@ from app.models import model
 from app.utils import schemas
 
 
-def create(request: schemas.CreateRole, db: Session):
-    role = db.query(model.Role).filter(model.Role.rolename == request.rolename).first()
+def create(request: schemas.CreateRole, db: Session, current_user):
+    role = db.query(model.Role).filter(model.Role.role_name == request.role_name).first()
     if role:
         raise HTTPException(status_code= 303,
-                            detail =f"User with the rolename { request.rolename} already exist")
+                            detail =f"User with the rolename { request.role_name} already exist")
     else: 
-        new_role = model.Role(rolename =request.rolename,
-                               department = request. department,
-                              date= request.dateAdded,
-                              isActive = request.isActive)
+        new_role = model.Role(role_name =request.role_name,
+                               admin_id = current_user.id)
+
+                              
+                              
                               
                               
         db.add(new_role)
