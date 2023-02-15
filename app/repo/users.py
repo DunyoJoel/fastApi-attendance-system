@@ -5,19 +5,19 @@ from app.models import model
 from app.utils import schemas
 
 
-def create(request: schemas.CreateUser, db: Session):
+def create(request: schemas.CreateUser, db: Session,current_user):
     user = db.query(model.User).filter(model.User.fullname == request.fullname).first()
     if user:
         raise HTTPException(status_code= 303,
                             detail =f"User with the name { request.fullname} already exist")
     else: 
         new_user = model.User(fullname =request.fullname,
-                               department = request. department,
                               location = request.location,
-                              contact = request.contact,
+                              phone_number = request.phone_number,
                               device= request.device,
-                              date= request.dateAdded,
-                              isActive = request.isActive)
+                              dateAdded= request.dateAdded,
+                              admin_id  = current_user.id 
+                              )
                               
                               
         db.add(new_user)
@@ -43,7 +43,9 @@ def show(id: int, db: Session):
   
 
 def get_all(db: Session):
-    users = db.query(model.User).filter(model.User.action_by == None).all()
+    users = db.query(model.User,model.Admin).outerjoin(model.Admin).all()
+    print(users)
+
     return users
 
 def get_all_admin(db: Session):
@@ -66,12 +68,11 @@ def update(id: int, request: schemas.ShowUser, db: Session):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"User with id {id} not found")
 
-    user.fullname = request.fulname
-    user.department = request.department
+    user.fullname = request.fullname
     user.location = request.location
-    user.contact = request.contact
+    user.phone_number = request.phone_number
     user.device = request.device
-    user.date = request.dateAdded
+    user.dateAdded = request.dateAdded
     user.isActive = request.isActive
    
     db.commit()

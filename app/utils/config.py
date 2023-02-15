@@ -9,7 +9,7 @@ load_dotenv(find_dotenv())
 
 
 class settings (BaseSettings):
-    PROJECT_NAME: str = "ATTENDANCE SYSTEM"
+    PROJECT_NAME: str = "GI-KACE ATTENDANCE SYSTEM"
     SQLALCHEMY_DATABASE_URL: str = os.environ.get("DATABASE_URL")
     ADMIN_NAME: str = os.environ.get("ADMIN_NAME")
     ADMIN_EMAIL: str = os.environ.get("ADMIN_EMAIL")

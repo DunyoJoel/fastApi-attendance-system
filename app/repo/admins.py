@@ -5,7 +5,7 @@ from app.models import model
 from app.utils import schemas
 
 
-def create(request: schemas.CreateAdmin, db: Session):
+def create(request: schemas.CreateAdmin, db: Session,current_user):
     admin = db.query(model.Admin).filter(model.Admin.email == request.email).first()
     if admin:
         raise HTTPException(status_code= 303,
@@ -15,6 +15,7 @@ def create(request: schemas.CreateAdmin, db: Session):
                               contact = request.contact,
                               email= request.email,
                               password= Hash.bcrypt(request.password),
+                              
                              
                               )
                               
@@ -68,7 +69,7 @@ def update(id: int, request: schemas.ShowAdmin, db: Session):
 
     admin.admin_name =request.admin_name
     admin.contact = request.contact
-    admin.email = request.device
+    admin.email = request.email
     admin.password = request.password
     admin.date = request.dateAdded
     

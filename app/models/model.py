@@ -11,17 +11,18 @@ class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key =True, index = True)
     fullname = Column(String)
-    department = Column(String, unique=True, index=True)
     location = Column(String,  nullable=True)
-    contact = Column(String)
+    phone_number = Column(String)
     device = Column(String,  nullable=True)
     dateAdded = Column(DateTime, default=datetime.now)
     isActive = Column(Boolean(), default=True)
     department_id = Column(Integer,ForeignKey("departments.id"))
     role_id = Column(Integer,ForeignKey("roles.id"))
+    admin_id = Column(Integer,ForeignKey("admins.id"))
     department = relationship("Department", back_populates="users")
     role = relationship("Role", back_populates="users")
     attendance = relationship("Attendance", back_populates="users")
+    admin = relationship("Admin", back_populates="users")
 
 
 
@@ -29,7 +30,6 @@ class Role(Base):
     __tablename__ = 'roles'
     id = Column(Integer, primary_key =True, index = True)
     role_name = Column(String)
-    
     admin_id = Column(Integer,ForeignKey("admins.id"))
     dateAdded = Column(DateTime, default=datetime.now)
     users = relationship("User", back_populates="role")
@@ -57,6 +57,7 @@ class Admin(Base):
     dateAdded = Column(DateTime, default=datetime.now)
     isActive = Column(Boolean(), default=True)
     department = relationship("Department")
+    users = relationship("User")
     
     
 

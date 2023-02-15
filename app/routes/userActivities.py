@@ -13,6 +13,8 @@ router = APIRouter()
 get_db = dbConn.get_db
 
 
+
+#route for department
 @router.post('/department/add', response_model=schemas.ShowDepartment, tags = ['Admin',])
 async def create_department(request:schemas.CreateDepartment, 
                             db: Session = Depends(get_db),
@@ -57,6 +59,7 @@ async def show_department_all(db: Session = Depends(get_db),  current_user: sche
 
 
 
+#route for role
 @router.delete('/role/{id}', response_model=schemas.ShowRole, tags = ['Admin'])
 async def destroy(id: int, db: Session = Depends(get_db),  current_user: schemas.ShowRole = Security(
         oauth2.get_current_active_user,
@@ -66,7 +69,7 @@ async def destroy(id: int, db: Session = Depends(get_db),  current_user: schemas
 
 
 @router.post('/role/add', response_model=schemas.ShowRole, tags = ['Admin',])
-async def create_department(request:schemas.CreateRole, 
+async def create_role(request:schemas.CreateRole, 
                             db: Session = Depends(get_db),
                               current_user: schemas.ShowAdmin = Security(
                                  oauth2.get_current_active_user
@@ -74,5 +77,95 @@ async def create_department(request:schemas.CreateRole,
     )):
     return roles.create(request, db,current_user)
 
+@router.get('/role/{id}',  response_model=schemas.ShowRole, tags = ['Admin'])
+async def show_role(id: int, db: Session = Depends(get_db),  current_user: schemas.ShowAdmin  = Security(
+        oauth2.get_current_active_user,
+        
+    )):
+    return roles.show(id, db)
 
 
+@router.get('/role/', response_model=List[schemas.RoleWithAdmin], tags = ['Admin'])
+async def show_role_all(db: Session = Depends(get_db),  current_user: schemas.ShowAdmin  = Security(
+        oauth2.get_current_active_user,
+        
+    )):
+    return departments.get_all(db)
+
+@router.put('/role/update',  response_model=schemas.ShowRole, tags = ['Admin'])
+async def update(request:schemas.UpdateRole, db: Session = Depends(get_db),  current_user: schemas.ShowAdmin  = Security(
+        oauth2.get_current_active_user,
+      
+    )):
+    return roles.update(request.id, request, db)
+
+
+#route for user
+@router.post('/user/add', response_model=schemas.ShowUser, tags = ['Admin',])
+async def create_user(request:schemas.CreateUser, 
+                            db: Session = Depends(get_db),
+                              current_user: schemas.ShowAdmin = Security(
+                                 oauth2.get_current_active_user
+        
+    )):
+    return users.create(request, db,current_user)
+
+@router.get('/user/{id}',  response_model=schemas.ShowUser, tags = ['Admin'])
+async def show_user(id: int, db: Session = Depends(get_db),  current_user: schemas.ShowAdmin  = Security(
+        oauth2.get_current_active_user,
+        
+    )):
+    return users.show(id, db)
+
+@router.get('/user/', response_model=List[schemas.UserWithAdmin], tags = ['Admin'])
+async def show_user_all(db: Session = Depends(get_db),  current_user: schemas.ShowAdmin  = Security(
+        oauth2.get_current_active_user,
+        
+    )):
+    return users.get_all(db)
+
+@router.put('/user/update',  response_model=schemas.ShowUser, tags = ['Admin'])
+async def update(request:schemas.UpdateUser, db: Session = Depends(get_db),  current_user: schemas.ShowAdmin  = Security(
+        oauth2.get_current_active_user,
+      
+    )):
+    return users.update(request.id, request, db)
+@router.delete('/user/{id}', response_model=schemas.ShowUser, tags = ['Admin'])
+async def destroy(id: int, db: Session = Depends(get_db),  current_user: schemas.ShowAdmin = Security(
+        oauth2.get_current_active_user,
+       
+    )):
+    return users.destroy(id, db)
+
+
+
+#route for admin
+@router.post('/admin/add', response_model=schemas.ShowAdmin, tags = ['Admin',])
+async def create_admin(request:schemas.CreateAdmin, 
+                            db: Session = Depends(get_db),
+                              current_user: schemas.ShowAdmin = Security(
+                                 oauth2.get_current_active_user
+        
+    )):
+    return admins.create(request, db,current_user)
+
+@router.get('/admin/{id}',  response_model=schemas.ShowAdmin, tags = ['Admin'])
+async def show_admin(id: int, db: Session = Depends(get_db),  current_user: schemas.ShowAdmin  = Security(
+        oauth2.get_current_active_user,
+        
+    )):
+    return admins.show(id, db)
+
+@router.put('/admin/update',  response_model=schemas.ShowAdmin, tags = ['Admin'])
+async def update(request:schemas.UpdateAdmin, db: Session = Depends(get_db),  current_user: schemas.ShowAdmin  = Security(
+        oauth2.get_current_active_user,
+      
+    )):
+    return admins.update(request.id, request, db)
+
+@router.delete('/admin/{id}', response_model=schemas.ShowAdmin, tags = ['Admin'])
+async def destroy(id: int, db: Session = Depends(get_db),  current_user: schemas.ShowAdmin = Security(
+        oauth2.get_current_active_user,
+       
+    )):
+    return admins.destroy(id, db)

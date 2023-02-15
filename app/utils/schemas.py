@@ -6,13 +6,13 @@ from datetime import datetime
 
 
 class CreateUser(BaseModel):
+    id: int
     fullname: str
-    department: str
     location: str
-    contact: str
+    phone_number: str
     device: str
-    dateAdded : datetime
-    isActive: bool = None
+    isActive: bool
+    dateAdded: datetime
 
     class Config():
         orm_mode = True
@@ -20,12 +20,31 @@ class CreateUser(BaseModel):
 class ShowUser(BaseModel):
     id: int
     fullname: str
-    department: str
     location: str
-    contact: str
+    phone_number: str
+    device: str
     isActive: bool
     dateAdded: datetime
     
+    class Config():
+        orm_mode = True
+
+class UpdateUser(BaseModel):
+    id: int
+    fullname: str
+    location: str
+    phone_number: str
+    device: str
+    isActive: bool
+    dateAdded: datetime
+    
+    class Config():
+        orm_mode = True
+
+class UserWithAdmin(BaseModel):
+    id: int
+    fullname: str
+  
     class Config():
         orm_mode = True
 
@@ -95,6 +114,19 @@ class ShowAdmin(BaseModel):
     class Config():
         orm_mode = True
 
+class UpdateAdmin(BaseModel):
+    id: int
+    admin_name: str
+    contact : str
+    email : str
+    password : str
+    dateAdded : datetime
+    isActive: bool = None
+    
+    
+
+    class Config():
+        orm_mode = True
 
 
 
@@ -125,4 +157,19 @@ class DepartmentWithAdmin(BaseModel):
   Department:ShowDepartment=None
   Admin:ShowAdmin=None
   class Config():
+        orm_mode = True
+
+        
+class RoleWithAdmin(BaseModel):
+  Role:ShowRole=None
+  Admin:ShowAdmin=None
+  class Config():
+        orm_mode = True
+
+class UpdateRole(BaseModel):
+    id: int
+    role_name: str
+   
+    
+    class Config():
         orm_mode = True
