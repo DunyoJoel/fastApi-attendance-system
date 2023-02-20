@@ -34,6 +34,13 @@ def show(id: int, db: Session):
                             detail=f"User with the id {id} is not available")
     return user
 
+
+def userByphoneNumber(phone_number: str, db: Session):
+    user = db.query(model.User).filter(model.User.phone_number == phone_number).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"User with the phone number  {phone_number} is not available")
+    return user
 # def showLoginUser(current_user, db: Session):
 #     loginUser =db.query(model.User, model.Sensor).outerjoin(model.Sensor).filter(model.User.id == current_user.id).first()
 #     if not loginUser:

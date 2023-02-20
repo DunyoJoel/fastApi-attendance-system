@@ -72,7 +72,7 @@ def update(id: int, request: schemas.UpdateDepartment, db: Session):
 
 
 def showDepartment(db: Session, department_name: str ):
-    department = db.query(model.Department).filter(model.Departmentr.department_name == department_name).first()
+    department = db.query(model.Department).filter(model.Department.department_name == department_name).first()
     if not department:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Role with the id {department_name} is not available")

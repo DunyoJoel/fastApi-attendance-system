@@ -12,9 +12,7 @@ def create(request: schemas.CreateRole, db: Session, current_user):
                             detail =f"User with the rolename { request.role_name} already exist")
     else: 
         new_role = model.Role(role_name =request.role_name,
-                               admin_id = current_user.id)
-
-                              
+                               admin_id = current_user.id)      
                               
                               
                               
@@ -41,7 +39,9 @@ def show(id: int, db: Session):
   
 
 def get_all(db: Session):
-    roles = db.query(model.Role).filter(model.Role.action_by == None).all()
+    roles = db.query(model.Role,model.Admin).outerjoin(model.Admin).all()
+    print(roles)
+
     return roles
 
 
@@ -62,9 +62,7 @@ def update(id: int, request: schemas.ShowRole, db: Session):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Role with id {id} not found")
 
-    role.rolename =request.rolename
-    role.department = request.department
-    role.dateAdded = request.dateAdded
+    role.role_name =request.role_name
    
     db.commit()
     db.refresh(role)

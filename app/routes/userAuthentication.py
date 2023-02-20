@@ -23,6 +23,3 @@ def login(request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(
             }
 
 
-@router.post('/register')
-async def registration(request: schemas.CreateUser, db: Session = Depends(get_db)):
- return admins.register(request, db)

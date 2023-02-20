@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.utils import schemas, dbConn
 from app.security import token
-from app.repo import users, roles, attendance,departments,admins
+from app.repo import users, roles, attendances,departments,admins
 
 from app.utils.initialUser import User
 from app.security import oauth2
@@ -90,7 +90,7 @@ async def show_role_all(db: Session = Depends(get_db),  current_user: schemas.Sh
         oauth2.get_current_active_user,
         
     )):
-    return departments.get_all(db)
+    return roles.get_all(db)
 
 @router.put('/role/update',  response_model=schemas.ShowRole, tags = ['Admin'])
 async def update(request:schemas.UpdateRole, db: Session = Depends(get_db),  current_user: schemas.ShowAdmin  = Security(
@@ -147,7 +147,7 @@ async def create_admin(request:schemas.CreateAdmin,
                                  oauth2.get_current_active_user
         
     )):
-    return admins.create(request, db,current_user)
+    return admins.create_new_admin(request, db,current_user)
 
 @router.get('/admin/{id}',  response_model=schemas.ShowAdmin, tags = ['Admin'])
 async def show_admin(id: int, db: Session = Depends(get_db),  current_user: schemas.ShowAdmin  = Security(
@@ -169,3 +169,55 @@ async def destroy(id: int, db: Session = Depends(get_db),  current_user: schemas
        
     )):
     return admins.destroy(id, db)
+
+
+#route for attendance
+@router.get('/attendance/{id}',  response_model=schemas.ShowAttendance, tags = ['Admin'])
+async def show_attendance(id: int, db: Session = Depends(get_db),  current_user: schemas.ShowAdmin  = Security(
+        oauth2.get_current_active_user,
+        
+    )):
+    return attendances.showAttendance(id, db)
+
+
+@router.delete('/attendance/{id}', response_model=schemas.ShowAttendance, tags = ['Admin'])
+async def destroy(id: int, db: Session = Depends(get_db),  current_user: schemas.ShowAdmin = Security(
+        oauth2.get_current_active_user,
+       
+    )):
+    return attendances.destroy(id, db)
+
+
+@router.get('/attendance/', response_model=List[schemas.ShowAttendance], tags = ['Admin'])
+async def show_attendance_all(db: Session = Depends(get_db),  current_user: schemas.ShowAdmin  = Security(
+        oauth2.get_current_active_user,
+        
+    )):
+    return attendances.get_all(db)
+
+@router.put('/attendance/update',  response_model=schemas.ShowAttendance, tags = ['Admin'])
+async def update(request:schemas.UpdateRole, db: Session = Depends(get_db),  current_user: schemas.ShowAdmin  = Security(
+        oauth2.get_current_active_user,
+      
+    )):
+    return attendances.update(request.id, request, db)
+
+
+@router.post('/attendance/user_login', response_model=schemas.ShowUser, tags = ['User',])
+async def user_login(phone_number: str, 
+                            db: Session = Depends(get_db)
+                              ):
+    return users.userByphoneNumber( phone_number,db)
+
+
+@router.post('/attendance/user_attendance_login', response_model=schemas.ShowAttendance, tags = ['User',])
+async def user_attendance_login(id: int, 
+                            db: Session = Depends(get_db)
+                              ):
+    return attendances.login_attendance( id,db)
+
+@router.post('/attendance/user_attendance_logout', response_model=schemas.ShowAttendance, tags = ['User',])
+async def user_attendance_logout(id: int, 
+                            db: Session = Depends(get_db)
+                              ):
+    return attendances.logout_attendance( id,db)

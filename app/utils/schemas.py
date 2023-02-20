@@ -41,16 +41,11 @@ class UpdateUser(BaseModel):
     class Config():
         orm_mode = True
 
-class UserWithAdmin(BaseModel):
-    id: int
-    fullname: str
-  
-    class Config():
-        orm_mode = True
 
 class CreateAttendance(BaseModel):
-    userId: int
-    action: str
+    time_in : str=None
+    time_out : str=None
+    userId : str=None
     
     class Config():
         orm_mode = True
@@ -170,6 +165,24 @@ class UpdateRole(BaseModel):
     id: int
     role_name: str
    
+    
+    class Config():
+        orm_mode = True
+
+
+class UserWithAdmin(BaseModel):
+    User:ShowUser
+    Admin:ShowAdmin
+
+  
+    class Config():
+        orm_mode = True
+
+class ShowAttendance(BaseModel):
+    id: int
+    time_in : str=None
+    time_out : str=None
+    attend_date: datetime
     
     class Config():
         orm_mode = True

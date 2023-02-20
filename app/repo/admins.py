@@ -5,7 +5,27 @@ from app.models import model
 from app.utils import schemas
 
 
-def create(request: schemas.CreateAdmin, db: Session,current_user):
+def create(request: schemas.CreateAdmin, db: Session):
+    admin = db.query(model.Admin).filter(model.Admin.email == request.email).first()
+    if admin:
+        raise HTTPException(status_code= 303,
+                            detail =f"Admin with the name { request.email} already exist")
+    else: 
+        new_admin = model.Admin(admin_name =request.admin_name,
+                              contact = request.contact,
+                              email= request.email,
+                              password= Hash.bcrypt(request.password),
+                              
+                             
+                              )
+                              
+                              
+        db.add(new_admin)
+        db.commit()
+        db.refresh(new_admin)
+        return new_admin
+    
+def create_new_admin(request: schemas.CreateAdmin, db: Session,current_user):
     admin = db.query(model.Admin).filter(model.Admin.email == request.email).first()
     if admin:
         raise HTTPException(status_code= 303,
@@ -72,8 +92,7 @@ def update(id: int, request: schemas.ShowAdmin, db: Session):
     admin.email = request.email
     admin.password = request.password
     admin.date = request.dateAdded
-    
-   
+
     db.commit()
     db.refresh(admin)
     return admin

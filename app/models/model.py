@@ -66,8 +66,8 @@ class Admin(Base):
 class Attendance(Base):
     __tablename__ = 'attendances'
     id = Column(Integer, primary_key = True, index = True)
-    time_in = Column(DateTime, default=datetime.now)
-    time_out = Column(DateTime, default=datetime.now)
+    time_in = Column(String)
+    time_out = Column(String)
     attend_date = Column(DateTime, default=datetime.now)
     userId = Column(Integer,ForeignKey("users.id"))
     users =relationship("User", back_populates="attendance")
